@@ -8,6 +8,10 @@ import app.boardMaker.menu.BoardMakerMenu;
 import app.display.dialogs.visual_editor.view.designPalettes.DesignPalette;
 import app.util.SettingsDesktop;
 
+/**
+ * Main frame of the Board Maker
+ */
+
 public class BoardMakerFrame extends JFrame
 {
 	private static final long serialVersionUID = 1L;
@@ -28,6 +32,7 @@ public class BoardMakerFrame extends JFrame
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		BoardMakerMenu menuBar = new BoardMakerMenu(boardMaker);
 		setJMenuBar(menuBar);
+		setContentPane(new BoardMakerPanel());
 		setVisible(true);
 	}
 }
