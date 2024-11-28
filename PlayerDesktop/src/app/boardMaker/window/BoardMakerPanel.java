@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
+import app.boardMaker.window.TabbedPane.BoardMakerTabbedBar;
+
 /**
  * Main panel of the frame
  **/
