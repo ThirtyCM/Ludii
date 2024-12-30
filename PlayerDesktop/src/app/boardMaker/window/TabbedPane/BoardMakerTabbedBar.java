@@ -1,12 +1,15 @@
 package app.boardMaker.window.TabbedPane;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+
+import app.boardMaker.maker.Maker;
 
 /**
  * Tabbed menu of the board maker
@@ -16,10 +19,10 @@ public class BoardMakerTabbedBar extends JPanel
 	private static final long serialVersionUID = 1L;
 	private final ActionListener boardButtonListener;
 
-	public BoardMakerTabbedBar() {
+	public BoardMakerTabbedBar(Maker maker) {
 		super(new BorderLayout());
 		
-		boardButtonListener = new BoardButtonListener();
+		boardButtonListener = new BoardButtonListener(maker);
 		
 		JToolBar toolbar = null;
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -29,8 +32,8 @@ public class BoardMakerTabbedBar extends JPanel
 		tabbedPane.addTab("Boards", toolbar);
 		
 		toolbar = initToolBar();
-		tabbedPane.addTab("Functions", toolbar);
 		makeFunctionsButtons(toolbar);
+		tabbedPane.addTab("Functions", toolbar);
 		
 		setOpaque(true);
 		
@@ -53,8 +56,8 @@ public class BoardMakerTabbedBar extends JPanel
 		for (BoardShapes shape : BoardShapes.values()) {
 			String name = shape.toString();
 			JButton button = new JButton(name);
+			button.setPreferredSize(new Dimension(150,30));
 			button.setActionCommand(name);
-			button.setToolTipText(name);
 			button.addActionListener(boardButtonListener);
 			tb.add(button);
 		}
@@ -63,4 +66,5 @@ public class BoardMakerTabbedBar extends JPanel
 	private void makeFunctionsButtons(JToolBar tb) {
 		// TODO
 	}
+
 }

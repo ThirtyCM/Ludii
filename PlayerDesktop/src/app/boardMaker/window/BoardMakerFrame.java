@@ -1,5 +1,7 @@
 package app.boardMaker.window;
 
+import java.awt.Dimension;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
@@ -28,11 +30,12 @@ public class BoardMakerFrame extends JFrame
 	public BoardMakerFrame(BoardMaker boardMaker) {
 		setTitle(title);
 		setIconImage(icon.getImage());
-		setSize(SettingsDesktop.defaultWidth,SettingsDesktop.defaultHeight);
+		setPreferredSize(new Dimension(SettingsDesktop.defaultWidth, SettingsDesktop.defaultHeight));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		BoardMakerMenu menuBar = new BoardMakerMenu(boardMaker);
 		setJMenuBar(menuBar);
-		setContentPane(new BoardMakerPanel());
+		setContentPane(new BoardMakerPanel(boardMaker.maker));
+		pack();
 		setVisible(true);
 	}
 }
