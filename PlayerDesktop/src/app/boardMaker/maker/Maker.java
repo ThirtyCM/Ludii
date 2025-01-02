@@ -1,5 +1,6 @@
 package app.boardMaker.maker;
 
+import app.boardMaker.window.boardpanel.BoardPanel;
 import game.functions.graph.GraphFunction;
 
 /**
@@ -12,6 +13,7 @@ public class Maker
 {
 	
 	private GraphFunction gFct;
+	private BoardPanel boardPanel;
 	
 	public Maker() {	
 	}
@@ -22,5 +24,10 @@ public class Maker
 	
 	public void setGraphFunction(GraphFunction gFct) {
 		this.gFct = gFct;
+		boardPanel.repaint();
+	}
+	
+	public void setBoardPanel(BoardPanel bPanel) {
+		this.boardPanel = bPanel;
 	}
 }

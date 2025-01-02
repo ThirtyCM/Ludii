@@ -32,9 +32,11 @@ public class BoardMakerFrame extends JFrame
 		setIconImage(icon.getImage());
 		setPreferredSize(new Dimension(SettingsDesktop.defaultWidth, SettingsDesktop.defaultHeight));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
 		BoardMakerMenu menuBar = new BoardMakerMenu(boardMaker);
 		setJMenuBar(menuBar);
 		setContentPane(new BoardMakerPanel(boardMaker.maker));
+		
 		pack();
 		setVisible(true);
 	}

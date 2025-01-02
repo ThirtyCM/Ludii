@@ -1,16 +1,30 @@
 package app.boardMaker.window.TabbedPane;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import app.boardMaker.dialogs.ParameterDialog;
 import app.boardMaker.maker.Maker;
 import game.functions.dim.DimConstant;
 import game.functions.graph.generators.basis.square.Square;
+import game.functions.graph.generators.basis.square.SquareShapeType;
 
 public class BoardButtonListener implements ActionListener
 {
 	
 	private Maker maker;
+	private ParameterDialog dialog;
 	
 	public BoardButtonListener(Maker maker) {
 		super();
@@ -19,16 +33,16 @@ public class BoardButtonListener implements ActionListener
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		System.out.println(e.getActionCommand());
+	public void actionPerformed(ActionEvent e) {
+		String boardType = e.getActionCommand();
 		
-		switch (e.getActionCommand()) {
-			case "Square" : 
-				maker.setGraphFunction(Square.construct(null,new DimConstant(3),null,null));
+		switch (boardType) {
+			case "Surakarta":
 				break;
-			default : System.out.println("Not yet.");
+			case "Mancala":
+				break;
+			default : 
+				dialog = new ParameterDialog(maker);
 		}
 	}
-
 }

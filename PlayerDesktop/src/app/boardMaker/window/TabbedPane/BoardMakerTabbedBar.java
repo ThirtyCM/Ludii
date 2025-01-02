@@ -18,9 +18,11 @@ public class BoardMakerTabbedBar extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	private final ActionListener boardButtonListener;
+	private final Maker maker;
 
 	public BoardMakerTabbedBar(Maker maker) {
 		super(new BorderLayout());
+		this.maker = maker;
 		
 		boardButtonListener = new BoardButtonListener(maker);
 		
@@ -48,19 +50,28 @@ public class BoardMakerTabbedBar extends JPanel
 	}
 	
 	/**
-	 * Adds buttons to select board shape to the toolbar.
+	 * Adds buttons to select board tiling to the toolbar.
 	 * 
-	 * @param tb
+	 * @param tb, the toolbar to add buttons.
 	 */
 	private void makeBoardButtons(JToolBar tb) {
-		for (BoardShapes shape : BoardShapes.values()) {
-			String name = shape.toString();
-			JButton button = new JButton(name);
-			button.setPreferredSize(new Dimension(150,30));
-			button.setActionCommand(name);
-			button.addActionListener(boardButtonListener);
-			tb.add(button);
-		}
+		JButton button = new JButton("New classical");
+		button.setActionCommand("Classic");
+		button.setPreferredSize(new Dimension(150,30));
+		button.addActionListener(boardButtonListener);
+		tb.add(button);
+		
+		button = new JButton("New mancala");
+		button.setActionCommand("Mancala");
+		button.setPreferredSize(new Dimension(150,30));
+		button.addActionListener(boardButtonListener);
+		tb.add(button);
+		
+		button = new JButton("New surakarta");
+		button.setActionCommand("Surakarta");
+		button.setPreferredSize(new Dimension(150,30));
+		button.addActionListener(boardButtonListener);
+		tb.add(button);
 	}
 	
 	private void makeFunctionsButtons(JToolBar tb) {

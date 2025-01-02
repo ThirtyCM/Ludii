@@ -6,15 +6,13 @@ package app.boardMaker.window.TabbedPane;
  * 
  */
 
-public enum BoardShapes
+public enum BoardTiling
 {
 	Brick,
 	Celtic,
 	Concentric,
 	Hex,
 	Quadhex,
-	Rectangle,
-	Rhombitrihexahedral,
 	Spiral,
 	Square,
 	Tiling,
