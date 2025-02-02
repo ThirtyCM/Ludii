@@ -41,7 +41,7 @@ public class QuadhexPanel extends JPanel
 		label = new JLabel("Number of layers: ");
 		panel = new JPanel();
 		panel.add(label);
-		layerSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+		layerSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(layerSpinner);
 		optionPanel.add(panel);
 		

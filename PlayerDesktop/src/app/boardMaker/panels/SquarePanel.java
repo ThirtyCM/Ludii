@@ -54,7 +54,7 @@ public class SquarePanel extends JPanel
 		
 		panel = new JPanel();
 		label = new JLabel("Cells/Vertices per side");
-		dimSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+		dimSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(label);
 		panel.add(dimSpinner);
 		optionPanel.add(panel);

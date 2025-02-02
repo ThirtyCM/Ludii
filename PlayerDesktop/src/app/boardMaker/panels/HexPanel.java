@@ -49,14 +49,14 @@ public class HexPanel extends JPanel
 		panel = new JPanel();
 		label = new JLabel("Primary number of cells/vertices per side: ");
 		panel.add(label);
-		rowSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+		rowSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(rowSpinner);
 		optionPanel.add(panel);
 		
 		panel = new JPanel();
 		label = new JLabel("Secondary number of cells/vertices (optional): ");
 		panel.add(label);
-		colSpinner = new JSpinner(new SpinnerNumberModel(-1,-1,Integer.MAX_VALUE,1));
+		colSpinner = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
 		panel.add(colSpinner);
 		optionPanel.add(panel);
 		
@@ -93,7 +93,7 @@ public class HexPanel extends JPanel
 				HexShapeType shape = (HexShapeType) cBox.getSelectedItem();
 				DimConstant dimA = new DimConstant((int)rowSpinner.getValue());
 				DimConstant dimB = new DimConstant((int)colSpinner.getValue());
-				maker.setGraphFunction(Hex.construct(shape, dimA, (dimB.eval() == -1) ? null : dimB));
+				maker.setGraphFunction(Hex.construct(shape, dimA, (dimB.eval() == 0) ? null : dimB));
 				dialog.dispose();
 			}
 		});
