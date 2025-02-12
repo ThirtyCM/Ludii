@@ -50,7 +50,7 @@ public class BoardMaker
 	 * Create main frame
 	 */
 	public void createFrame() {
-		frame = new BoardMakerFrame(this);
+		frame = new BoardMakerFrame(maker);
 		frame.requestFocus();
 	}
 }

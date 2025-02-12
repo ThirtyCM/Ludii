@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import app.boardMaker.BoardMaker;
+import app.boardMaker.maker.Maker;
 import app.boardMaker.menu.BoardMakerMenu;
 import app.display.dialogs.visual_editor.view.designPalettes.DesignPalette;
 import app.util.SettingsDesktop;
@@ -27,15 +28,15 @@ public class BoardMakerFrame extends JFrame
 	
 	//-------------------------------------------------------------------------
 	
-	public BoardMakerFrame(BoardMaker boardMaker) {
+	public BoardMakerFrame(Maker maker) {
 		setTitle(title);
 		setIconImage(icon.getImage());
 		setPreferredSize(new Dimension(SettingsDesktop.defaultWidth, SettingsDesktop.defaultHeight));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		BoardMakerMenu menuBar = new BoardMakerMenu(boardMaker);
+		BoardMakerMenu menuBar = new BoardMakerMenu(maker);
 		setJMenuBar(menuBar);
-		setContentPane(new BoardMakerPanel(boardMaker.maker));
+		setContentPane(new BoardMakerPanel(maker));
 		
 		pack();
 		setVisible(true);

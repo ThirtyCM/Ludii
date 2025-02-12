@@ -12,6 +12,7 @@ import game.equipment.Item;
 import game.equipment.container.board.Board;
 import game.functions.graph.GraphFunction;
 import game.functions.ints.count.simple.CountMovesThisTurn;
+import game.players.Players;
 import other.context.Context;
 import other.trial.Trial;
 import util.PlaneType;
@@ -29,8 +30,13 @@ public class Maker
 	
 	private GraphFunction gFct;
 	private BoardPanel boardPanel;
+	private Game game;
 	
 	public Maker() {	
+	}
+	
+	public Game getGame() {
+		return game;
 	}
 	
 	public GraphFunction getGraphFunction() {
@@ -49,15 +55,16 @@ public class Maker
 	public void drawBoard(Graphics2D g2d, int width, int height) {
 		Board board = new Board(gFct, null, null, null, null, null, null);
 		
-		Game game = new Game("", null, null, new Equipment(new Item[] {board}), null);
+		Game game = new Game("test", new Players(2), null, new Equipment(new Item[] {board}), null);
 		game.create();
 		game.setMetadata(null);
+		this.game = game;
 		
 		Context context = new Context(game, new Trial(game));
 		Bridge bridge = new Bridge();
 		
 		BoardStyle style = new BoardStyle(bridge, board);
-		style.setPlacement(context, new Rectangle(width, height));
+		style.setPlacement(context, new Rectangle(0,0,width, height));
 		style.render(PlaneType.BOARD, context);
 		
 		String svg = style.containerSVGImage();

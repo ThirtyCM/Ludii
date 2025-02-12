@@ -6,7 +6,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 import app.boardMaker.maker.Maker;
 import app.boardMaker.window.TabbedPane.BoardTiling;
@@ -40,7 +42,13 @@ public class ParameterDialog extends JDialog
 		JTabbedPane tPane = new JTabbedPane();
 		for (BoardTiling tiling : BoardTiling.values()) {
 			try {
-				tPane.addTab(tiling.name(), (JPanel) Class.forName("app.boardMaker.panels."+tiling+"Panel").getConstructor(JDialog.class,Maker.class).newInstance(this,maker));
+				JPanel p = new JPanel(new BorderLayout());
+				JPanel tmp = (JPanel) Class.forName("app.boardMaker.panels."+tiling+"Panel").getConstructor(JDialog.class,Maker.class).newInstance(this,maker);
+				tmp.setPreferredSize(new Dimension(400,500));
+				p.add(tmp,BorderLayout.WEST);
+				p.add(new JSeparator(SwingConstants.VERTICAL),BorderLayout.CENTER);
+				// Add preview panel
+				tPane.addTab(tiling.name(), p);
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException | NoSuchMethodException | SecurityException

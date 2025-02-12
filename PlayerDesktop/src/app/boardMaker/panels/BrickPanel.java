@@ -1,10 +1,13 @@
 package app.boardMaker.panels;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -38,30 +41,33 @@ public class BrickPanel extends JPanel
 		this.dialog = dialog;
 		this.maker = maker;
 		
-		JPanel optionPanel = new JPanel(new GridLayout(0, 1, 5, 0));
+		JPanel optionPanel = new JPanel();
+		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 		
-		JPanel panel = new JPanel();
+		optionPanel.add(Box.createVerticalGlue());
+		
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JLabel label = new JLabel("Board shape: ");
 		cBox = new JComboBox<>(BrickShapeType.values());
 		panel.add(label);
 		panel.add(cBox);
 		optionPanel.add(panel);
 				
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Number of rows: ");
 		panel.add(label);
 		rowSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(rowSpinner);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Number of columns (optional): ");
 		panel.add(label);
 		colSpinner = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
 		panel.add(colSpinner);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Trim (optional): ");
 		panel.add(label);
 		ButtonGroup group = new ButtonGroup();
@@ -93,6 +99,8 @@ public class BrickPanel extends JPanel
 		panel.add(button);
 		group.add(button);
 		optionPanel.add(panel);
+		
+		optionPanel.add(Box.createVerticalGlue());
 		
 		add(optionPanel,BorderLayout.WEST);
 		

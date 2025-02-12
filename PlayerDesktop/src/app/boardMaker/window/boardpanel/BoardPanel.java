@@ -13,6 +13,7 @@ import app.boardMaker.window.TabbedPane.BoardTiling;
 import app.utils.SVGUtil;
 import bridge.Bridge;
 import game.equipment.container.board.Board;
+import game.functions.dim.math.Min;
 import game.types.board.SiteType;
 import graphics.svg.SVG;
 import other.context.Context;
@@ -25,10 +26,13 @@ public class BoardPanel extends JPanel
 	
 	private Maker maker;
 	
+	private double boardRatio;
+	
 	public BoardPanel(Maker maker) {
 		super(new BorderLayout());
 		
 		this.maker = maker;
+		this.boardRatio = 1.0;
 		maker.setBoardPanel(this);
 	}
 
@@ -40,7 +44,8 @@ public class BoardPanel extends JPanel
 		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		if (maker.getGraphFunction() != null) {
-			maker.drawBoard(g2d,this.getWidth(), this.getHeight());
+			int boardSize = Math.min(this.getHeight(), (int)(this.getWidth() * boardRatio));
+			maker.drawBoard(g2d,boardSize, boardSize);
 		}
 	}
 	

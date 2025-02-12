@@ -1,10 +1,13 @@
 package app.boardMaker.panels;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -34,25 +37,29 @@ public class SpiralPanel extends JPanel
 		this.dialog = dialog;
 		this.maker = maker;
 		
-		JPanel optionPanel = new JPanel(new GridLayout(0,1,5,0));
+		JPanel optionPanel = new JPanel();
+		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
+		
+		optionPanel.add(Box.createVerticalGlue());
+		
 		JPanel panel;
 		JLabel label;
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Number of turns: ");
 		panel.add(label);
 		turns = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(turns);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Number of sites: ");
 		panel.add(label);
 		sites = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(sites);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Rotation direction: ");
 		panel.add(label);
 		ButtonGroup group = new ButtonGroup();
@@ -84,6 +91,8 @@ public class SpiralPanel extends JPanel
 		group.add(button);
 		panel.add(button);
 		optionPanel.add(panel);
+		
+		optionPanel.add(Box.createVerticalGlue());
 		
 		add(optionPanel,BorderLayout.WEST);
 		

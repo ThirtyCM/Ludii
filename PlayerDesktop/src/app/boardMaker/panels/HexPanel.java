@@ -1,10 +1,13 @@
 package app.boardMaker.panels;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -32,12 +35,15 @@ public class HexPanel extends JPanel
 		this.dialog = dialog;
 		this.maker = maker;
 		
-		JPanel optionPanel = new JPanel(new GridLayout(0,1,5,0));
+		JPanel optionPanel = new JPanel();
+		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
+		
+		optionPanel.add(Box.createVerticalGlue());
 		
 		JPanel panel;
 		JLabel label;
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Board shape: ");
 		cBox = new JComboBox<HexShapeType>(HexShapeType.values());
 		cBox.removeItem(HexShapeType.NoShape);
@@ -46,19 +52,21 @@ public class HexPanel extends JPanel
 		panel.add(cBox);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
-		label = new JLabel("Primary number of cells/vertices per side: ");
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		label = new JLabel("Primary number of sites per side: ");
 		panel.add(label);
 		rowSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(rowSpinner);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
-		label = new JLabel("Secondary number of cells/vertices (optional): ");
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		label = new JLabel("Secondary number of sites (optional): ");
 		panel.add(label);
 		colSpinner = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
 		panel.add(colSpinner);
 		optionPanel.add(panel);
+		
+		optionPanel.add(Box.createVerticalGlue());
 		
 		add(optionPanel,BorderLayout.WEST);
 		

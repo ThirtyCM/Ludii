@@ -1,10 +1,13 @@
 package app.boardMaker.panels;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -39,11 +42,15 @@ public class SquarePanel extends JPanel
 		this.dialog = dialog;
 		this.maker = maker;
 		
-		JPanel optionPanel = new JPanel(new GridLayout(0,1,5,0));
+		JPanel optionPanel = new JPanel();
+		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
+		
+		optionPanel.add(Box.createVerticalGlue());
+		
 		JPanel panel;
 		JLabel label;
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Board shape: ");
 		panel.add(label);
 		cBox = new JComboBox<SquareShapeType>(SquareShapeType.values());
@@ -52,14 +59,14 @@ public class SquarePanel extends JPanel
 		panel.add(cBox);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Cells/Vertices per side");
 		dimSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(label);
 		panel.add(dimSpinner);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Type of diagonals: ");
 		panel.add(label);
 		diagBox = new JComboBox<DiagonalsType>(DiagonalsType.values());
@@ -67,7 +74,7 @@ public class SquarePanel extends JPanel
 		panel.add(diagBox);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Pyramidal stacking: ");
 		panel.add(label);
 		ButtonGroup group = new ButtonGroup();
@@ -100,7 +107,7 @@ public class SquarePanel extends JPanel
 		panel.add(button);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Select active: ");
 		group = new ButtonGroup();
 		button = new JRadioButton("Diagonal");
@@ -131,6 +138,8 @@ public class SquarePanel extends JPanel
 		group.add(button);
 		panel.add(button);
 		optionPanel.add(panel);
+		
+		optionPanel.add(Box.createVerticalGlue());
 		
 		add(optionPanel, BorderLayout.WEST);
 		

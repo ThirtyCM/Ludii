@@ -6,6 +6,7 @@ import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 
 import app.boardMaker.BoardMaker;
+import app.boardMaker.maker.Maker;
 
 /**
  * Menu bar of the frame
@@ -14,9 +15,12 @@ public class BoardMakerMenu extends JMenuBar
 {
 	
 	private static final long serialVersionUID = 1L;
-
-	public BoardMakerMenu(BoardMaker boardMaker) {
-		final ActionListener al = new BoardMakerMenuListener();
+	private Maker maker;
+	
+	public BoardMakerMenu(Maker maker) {
+		this.maker = maker;
+		
+		final ActionListener al = new BoardMakerMenuListener(maker);
 		
 		JMenuItem menuItem;
 		

@@ -1,10 +1,13 @@
 package app.boardMaker.panels;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -32,9 +35,12 @@ public class CelticPanel extends JPanel
 		this.dialog = dialog;
 		this.maker = maker;
 		
-		JPanel optionPanel = new JPanel(new GridLayout(0,1,5,0));
+		JPanel optionPanel = new JPanel();
+		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 		
-		JPanel panel = new JPanel();
+		optionPanel.add(Box.createVerticalGlue());
+		
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JLabel label;
 		
 		label = new JLabel("Number of rows: ");
@@ -43,12 +49,14 @@ public class CelticPanel extends JPanel
 		panel.add(rowSpinner);
 		optionPanel.add(panel);
 		
-		panel = new JPanel();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Number of columns (optional): ");
 		panel.add(label);
 		colSpinner = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
 		panel.add(colSpinner);
 		optionPanel.add(panel);
+		
+		optionPanel.add(Box.createVerticalGlue());
 		
 		add(optionPanel,BorderLayout.WEST);
 		
