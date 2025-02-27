@@ -1,14 +1,18 @@
 package app.boardMaker.panels;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,18 +20,25 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.maker.Maker;
+import app.boardMaker.tools.PolygonListener;
+import app.boardMaker.tools.PolygonView;
 import game.functions.dim.DimConstant;
 import game.functions.graph.generators.basis.brick.Brick;
 import game.functions.graph.generators.basis.brick.BrickShapeType;
 import game.functions.graph.generators.basis.celtic.Celtic;
+import game.util.graph.Poly;
 
-public class CelticPanel extends JPanel
+public class CelticPanel extends JPanel implements ItemListener
 {
 	private JDialog dialog;
+	private JPanel cards;
 	private Maker maker;
 	private JSpinner rowSpinner;
 	private JSpinner colSpinner;
+	private JComboBox<String> shapeCBox;
+	private PolygonView polygonView;
 	
+	private PolygonListener pl;
 	
 	public CelticPanel(JDialog dialog, Maker maker) {
 		super(new BorderLayout());
@@ -41,20 +52,52 @@ public class CelticPanel extends JPanel
 		optionPanel.add(Box.createVerticalGlue());
 		
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JLabel label;
+		JLabel label = new JLabel("Board shape: ");
+		String[] shapeItems = new String[] {"Rectangle", "Custom"};
+		shapeCBox = new JComboBox<String>(shapeItems);
+		shapeCBox.addItemListener(this);
+		panel.add(label);
+		panel.add(shapeCBox);
+		optionPanel.add(panel);
 		
+		//----------------------------------------------------------------------------------------------
+		//Rectangle card panel linked to first item of shapeItems
+		JPanel rectangleCard = new JPanel();
+		rectangleCard.setLayout(new BoxLayout(rectangleCard, BoxLayout.Y_AXIS));
+		
+		rectangleCard.add(Box.createVerticalGlue());
+		
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Number of rows: ");
 		panel.add(label);
 		rowSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		panel.add(rowSpinner);
-		optionPanel.add(panel);
+		rectangleCard.add(panel);
 		
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Number of columns (optional): ");
 		panel.add(label);
 		colSpinner = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
 		panel.add(colSpinner);
-		optionPanel.add(panel);
+		rectangleCard.add(panel);
+		rectangleCard.add(Box.createVerticalGlue());
+		
+		//----------------------------------------------------------------------------------------------
+		//PolygonView linked to the second item of shapeItems
+		JPanel polygonCard = new JPanel();
+		polygonView = new PolygonView(300,300,10);
+		this.pl = new PolygonListener(polygonView);
+		polygonView.addMouseListener(pl);
+		polygonCard.add(polygonView);
+		
+		//----------------------------------------------------------------------------------------------
+		//Card panel
+		cards = new JPanel(new CardLayout());
+		cards.add(rectangleCard,shapeItems[0]);
+		cards.add(polygonCard,shapeItems[1]);
+		optionPanel.add(cards);
+		
+		//----------------------------------------------------------------------------------------------
 		
 		optionPanel.add(Box.createVerticalGlue());
 		
@@ -88,12 +131,25 @@ public class CelticPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				DimConstant dimA = new DimConstant((int)rowSpinner.getValue());
-				DimConstant dimB = new DimConstant((int)colSpinner.getValue());
-				maker.setGraphFunction(new Celtic(dimA, (dimB.eval() == 0) ? null : dimB));
+				if (((String)shapeCBox.getSelectedItem()).equals("Rectangle")) {
+					DimConstant dimA = new DimConstant((int)rowSpinner.getValue());
+					DimConstant dimB = new DimConstant((int)colSpinner.getValue());
+					maker.setGraphFunction(new Celtic(dimA, (dimB.eval() == 0) ? null : dimB));
+				} else if (((String)shapeCBox.getSelectedItem()).equals("Custom")) {
+					//Poly poly = new Poly(null, null);
+					//maker.setGraphFunction(new Celtic(null, null));
+				}
 				dialog.dispose();
 			}
 		});
 		return button;
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e)
+	{
+		// TODO Auto-generated method stub
+		CardLayout cl = (CardLayout) cards.getLayout();
+		cl.show(cards, (String) e.getItem());
 	}
 }
