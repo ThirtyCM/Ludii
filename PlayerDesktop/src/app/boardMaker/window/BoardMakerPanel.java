@@ -1,7 +1,13 @@
 package app.boardMaker.window;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import app.boardMaker.maker.Maker;
@@ -16,12 +22,68 @@ public class BoardMakerPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
+	private Maker maker;
+	
+	private BoardMakerTabbedBar tb;
+	private BoardPanel bp;
+	private JPanel welcomePanel;
+	private boolean newGame = true;
+	
 	public BoardMakerPanel(Maker maker) {
 		super(new BorderLayout());
 		
-		add(new BoardMakerTabbedBar(maker), BorderLayout.NORTH);
-		add(new BoardPanel(maker), BorderLayout.CENTER);
+		this.maker = maker;
+		welcomePanel = createWelcome();
+		tb = new BoardMakerTabbedBar(maker);
+		bp = new BoardPanel(maker);
+		
+		add(tb, BorderLayout.NORTH);
+		add(bp, BorderLayout.CENTER);
+		add(welcomePanel, BorderLayout.CENTER);
+		
+		tb.setVisible(!newGame);
+		bp.setVisible(!newGame);
+		welcomePanel.setVisible(newGame);
+		
 		setOpaque(true);
 	}
 	
+	private JPanel createWelcome() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
+		panel.add(Box.createVerticalGlue());
+		
+		JLabel message = new JLabel("Welcome in Ludii's Board Maker.");
+		message.setAlignmentX(CENTER_ALIGNMENT);
+		panel.add(message);
+		
+		message = new JLabel("To begin, click on the button below to create a new game.");
+		message.setAlignmentX(CENTER_ALIGNMENT);
+		panel.add(message);
+		
+		JButton button = new JButton("New game");
+		button.setAlignmentX(CENTER_ALIGNMENT);
+		button.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// TODO Auto-generated method stub
+				newGame = false;
+				
+				tb.setVisible(!newGame);
+				bp.setVisible(!newGame);
+				welcomePanel.setVisible(newGame);
+				
+				//maker.createNewGame();
+			}
+		});
+		panel.add(button);
+		
+		panel.add(Box.createVerticalGlue());
+		
+		return panel;
+	}
 }
