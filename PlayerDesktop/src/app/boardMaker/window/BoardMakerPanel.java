@@ -1,6 +1,7 @@
 package app.boardMaker.window;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,7 +31,6 @@ public class BoardMakerPanel extends JPanel
 	private BoardMakerTabbedBar tb;
 	private BoardPanel bp;
 	private JPanel welcomePanel;
-	private boolean newGame = true;
 	
 	public BoardMakerPanel(Maker maker) {
 		super(new BorderLayout());
@@ -42,13 +42,7 @@ public class BoardMakerPanel extends JPanel
 		tb = new BoardMakerTabbedBar(maker);
 		bp = new BoardPanel(maker);
 		
-		add(tb, BorderLayout.NORTH);
-		add(bp, BorderLayout.CENTER);
 		add(welcomePanel, BorderLayout.CENTER);
-		
-		tb.setVisible(!newGame);
-		bp.setVisible(!newGame);
-		welcomePanel.setVisible(newGame);
 		
 		setOpaque(true);
 	}
@@ -87,9 +81,19 @@ public class BoardMakerPanel extends JPanel
 	}
 	
 	public void showBoardMaker() {
-		newGame = false;
-		tb.setVisible(!newGame);
-		bp.setVisible(!newGame);
-		welcomePanel.setVisible(newGame);
+		remove(welcomePanel);
+		
+		add(tb,BorderLayout.NORTH);
+		add(bp,BorderLayout.CENTER);
+		
+		revalidate();
+	}
+	
+	public BoardPanel bp() {
+		return bp;
+	}
+	
+	public BoardMakerTabbedBar tb() {
+		return tb;
 	}
 }
