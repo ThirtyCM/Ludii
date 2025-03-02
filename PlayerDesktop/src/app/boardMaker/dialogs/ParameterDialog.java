@@ -29,6 +29,7 @@ public class ParameterDialog extends JDialog
 		
 		requestFocus();
 		pack();
+		setLocationRelativeTo(rootPane);
 		setVisible(true);
 	}
 	

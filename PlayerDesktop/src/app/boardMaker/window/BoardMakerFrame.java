@@ -39,6 +39,7 @@ public class BoardMakerFrame extends JFrame
 		setContentPane(new BoardMakerPanel(maker));
 		
 		pack();
+		setLocationRelativeTo(rootPane);
 		setVisible(true);
 	}
 }

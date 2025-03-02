@@ -7,9 +7,11 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import app.boardMaker.dialogs.NGDialog;
 import app.boardMaker.maker.Maker;
 import app.boardMaker.window.TabbedPane.BoardMakerTabbedBar;
 import app.boardMaker.window.boardpanel.BoardPanel;
@@ -23,6 +25,7 @@ public class BoardMakerPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	
 	private Maker maker;
+	private BoardMakerPanel bm;
 	
 	private BoardMakerTabbedBar tb;
 	private BoardPanel bp;
@@ -33,6 +36,8 @@ public class BoardMakerPanel extends JPanel
 		super(new BorderLayout());
 		
 		this.maker = maker;
+		bm = this;
+		
 		welcomePanel = createWelcome();
 		tb = new BoardMakerTabbedBar(maker);
 		bp = new BoardPanel(maker);
@@ -71,13 +76,7 @@ public class BoardMakerPanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				// TODO Auto-generated method stub
-				newGame = false;
-				
-				tb.setVisible(!newGame);
-				bp.setVisible(!newGame);
-				welcomePanel.setVisible(newGame);
-				
-				//maker.createNewGame();
+				JDialog dialog = new NGDialog(maker,bm);
 			}
 		});
 		panel.add(button);
@@ -85,5 +84,12 @@ public class BoardMakerPanel extends JPanel
 		panel.add(Box.createVerticalGlue());
 		
 		return panel;
+	}
+	
+	public void showBoardMaker() {
+		newGame = false;
+		tb.setVisible(!newGame);
+		bp.setVisible(!newGame);
+		welcomePanel.setVisible(newGame);
 	}
 }

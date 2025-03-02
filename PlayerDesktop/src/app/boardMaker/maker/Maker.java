@@ -3,6 +3,9 @@ package app.boardMaker.maker;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import javax.swing.JDialog;
+
+import app.boardMaker.dialogs.NGDialog;
 import app.boardMaker.window.boardpanel.BoardPanel;
 import app.utils.SVGUtil;
 import bridge.Bridge;
@@ -12,7 +15,9 @@ import game.equipment.Item;
 import game.equipment.container.board.Board;
 import game.functions.graph.GraphFunction;
 import game.functions.ints.count.simple.CountMovesThisTurn;
+import game.mode.Mode;
 import game.players.Players;
+import game.types.play.ModeType;
 import other.context.Context;
 import other.trial.Trial;
 import util.PlaneType;
@@ -31,6 +36,10 @@ public class Maker
 	private GraphFunction gFct;
 	private BoardPanel boardPanel;
 	private Game game;
+	
+	private String gameName;
+	private Players players;
+	private Mode gameMode;
 	
 	public Maker() {	
 	}
@@ -52,10 +61,12 @@ public class Maker
 		this.boardPanel = bPanel;
 	}
 	
+	//----------------------------------------------------------------------
+	
 	public void drawBoard(Graphics2D g2d, int width, int height) {
 		Board board = new Board(gFct, null, null, null, null, null, null);
 		
-		Game game = new Game("test", new Players(2), null, new Equipment(new Item[] {board}), null);
+		Game game = new Game(gameName, players, gameMode, new Equipment(new Item[] {board}), null);
 		game.create();
 		game.setMetadata(null);
 		this.game = game;
@@ -73,5 +84,13 @@ public class Maker
 		}
 		
 		g2d.drawImage(SVGUtil.createSVGImage(svg, width, height), 0, 0, null);
+	}
+	
+	//----------------------------------------------------------------------
+	
+	public void createNewGame(String name, int players, ModeType mode) {
+		gameName = name;
+		this.players = new Players(players);
+		gameMode = new Mode(mode);
 	}
 }
