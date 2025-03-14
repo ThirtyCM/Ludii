@@ -17,13 +17,15 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.maker.Maker;
+import app.boardMaker.tools.PreviewPanel;
 import game.functions.dim.DimConstant;
+import game.functions.graph.GraphFunction;
 import game.functions.graph.generators.basis.brick.Brick;
 import game.functions.graph.generators.basis.brick.BrickShapeType;
 import game.functions.graph.generators.basis.tiling.Tiling;
 import game.functions.graph.generators.basis.tiling.TilingType;
 
-public class TilingPanel extends JPanel
+public class TilingPanel extends ParameterPanel
 {
 	private JDialog dialog;
 	private Maker maker;
@@ -31,11 +33,15 @@ public class TilingPanel extends JPanel
 	private JSpinner pSpinner;
 	private JSpinner sSpinner;
 	
-	public TilingPanel(JDialog dialog, Maker maker) {
+	private GraphFunction graph;
+	private ActionListener al;
+	
+	public TilingPanel(JDialog dialog, Maker maker, PreviewPanel al) {
 		super(new BorderLayout());
 		
 		this.dialog = dialog;
 		this.maker = maker;
+		this.al = al;
 		
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
@@ -49,6 +55,7 @@ public class TilingPanel extends JPanel
 		label = new JLabel("Tiling type");
 		panel.add(label);
 		tBox = new JComboBox<TilingType>(TilingType.values());
+		tBox.addActionListener(al);
 		panel.add(tBox);
 		optionPanel.add(panel);
 		
@@ -56,6 +63,7 @@ public class TilingPanel extends JPanel
 		label = new JLabel("Primary dimension size: ");
 		panel.add(label);
 		pSpinner = new JSpinner(new SpinnerNumberModel(1,1,Integer.MAX_VALUE,1));
+		pSpinner.addChangeListener(al);
 		panel.add(pSpinner);
 		optionPanel.add(panel);
 		
@@ -63,6 +71,7 @@ public class TilingPanel extends JPanel
 		label = new JLabel("Secondary dimension size (optional): ");
 		panel.add(label);
 		sSpinner = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
+		sSpinner.addChangeListener(al);
 		panel.add(sSpinner);
 		optionPanel.add(panel);
 		
@@ -74,6 +83,8 @@ public class TilingPanel extends JPanel
 		buttonPanel.add(makeCreateButton());
 		buttonPanel.add(makeCancelButton());
 		add(buttonPanel,BorderLayout.SOUTH);
+		
+		createBoard();
 	}
 	
 	public JButton makeCancelButton() {
@@ -98,13 +109,27 @@ public class TilingPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				TilingType type = (TilingType) tBox.getSelectedItem();
-				DimConstant dimA = new DimConstant((int)pSpinner.getValue());
-				DimConstant dimB = new DimConstant((int)sSpinner.getValue());
-				maker.setGraphFunction(Tiling.construct(type, dimA, (dimB.eval() == 0) ? null : dimB));
+				maker.setGraphFunction(graph);
 				dialog.dispose();
 			}
 		});
 		return button;
+	}
+
+	@Override
+	public void createBoard()
+	{
+		// TODO Auto-generated method stub
+		TilingType type = (TilingType) tBox.getSelectedItem();
+		DimConstant dimA = new DimConstant((int)pSpinner.getValue());
+		DimConstant dimB = new DimConstant((int)sSpinner.getValue());
+		graph = Tiling.construct(type, dimA, (dimB.eval() == 0) ? null : dimB);
+	}
+
+	@Override
+	public GraphFunction getGraph()
+	{
+		// TODO Auto-generated method stub
+		return graph;
 	}
 }

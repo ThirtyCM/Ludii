@@ -16,23 +16,29 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.maker.Maker;
+import app.boardMaker.tools.PreviewPanel;
 import game.functions.dim.DimConstant;
+import game.functions.graph.GraphFunction;
 import game.functions.graph.generators.basis.tri.Tri;
 import game.functions.graph.generators.basis.tri.TriShapeType;
 import game.functions.graph.generators.shape.Wedge;
 
-public class WedgePanel extends JPanel
+public class WedgePanel extends ParameterPanel
 {
 	private JDialog dialog;
 	private Maker maker;
 	private JSpinner row;
 	private JSpinner col;
 	
-	public WedgePanel(JDialog dialog, Maker maker) {
+	private GraphFunction graph;
+	private ActionListener al;
+	
+	public WedgePanel(JDialog dialog, Maker maker, PreviewPanel al) {
 		super(new BorderLayout());
 		
 		this.dialog = dialog;
 		this.maker = maker;
+		this.al = al;
 		
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
@@ -46,6 +52,7 @@ public class WedgePanel extends JPanel
 		label = new JLabel("Number of rows: ");
 		panel.add(label);
 		row = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+		row.addChangeListener(al);
 		panel.add(row);
 		optionPanel.add(panel);
 		
@@ -53,6 +60,7 @@ public class WedgePanel extends JPanel
 		label = new JLabel("Number of columns (optional): ");
 		panel.add(label);
 		col = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+		col.addChangeListener(al);
 		panel.add(col);
 		optionPanel.add(panel);
 		
@@ -64,6 +72,8 @@ public class WedgePanel extends JPanel
 		buttonPanel.add(makeCreateButton());
 		buttonPanel.add(makeCancelButton());
 		add(buttonPanel,BorderLayout.SOUTH);
+		
+		createBoard();
 	}
 	
 	public JButton makeCancelButton() {
@@ -88,10 +98,24 @@ public class WedgePanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				maker.setGraphFunction(new Wedge(new DimConstant((int) row.getValue()), ((int)col.getValue() == 0) ? null : new DimConstant((int) col.getValue())));
+				maker.setGraphFunction(graph);
 				dialog.dispose();
 			}
 		});
 		return button;
+	}
+
+	@Override
+	public void createBoard()
+	{
+		// TODO Auto-generated method stub
+		graph = new Wedge(new DimConstant((int) row.getValue()), ((int)col.getValue() == 0) ? null : new DimConstant((int) col.getValue()));
+	}
+
+	@Override
+	public GraphFunction getGraph()
+	{
+		// TODO Auto-generated method stub
+		return graph;
 	}
 }

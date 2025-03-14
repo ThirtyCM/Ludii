@@ -19,14 +19,16 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.maker.Maker;
+import app.boardMaker.tools.PreviewPanel;
 import game.functions.dim.DimConstant;
+import game.functions.graph.GraphFunction;
 import game.functions.graph.generators.basis.brick.Brick;
 import game.functions.graph.generators.basis.brick.BrickShapeType;
 import game.functions.graph.generators.basis.square.DiagonalsType;
 import game.functions.graph.generators.basis.square.Square;
 import game.functions.graph.generators.basis.square.SquareShapeType;
 
-public class SquarePanel extends JPanel
+public class SquarePanel extends ParameterPanel
 {
 	private JDialog dialog;
 	private Maker maker;
@@ -36,11 +38,15 @@ public class SquarePanel extends JPanel
 	private boolean pyramid = false;
 	private boolean diagEnabled = true;
 	
-	public SquarePanel(JDialog dialog, Maker maker) {
+	private GraphFunction graph;
+	private ActionListener al;
+	
+	public SquarePanel(JDialog dialog, Maker maker, PreviewPanel al) {
 		super(new BorderLayout());
 		
 		this.dialog = dialog;
 		this.maker = maker;
+		this.al = al;
 		
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
@@ -56,12 +62,14 @@ public class SquarePanel extends JPanel
 		cBox = new JComboBox<SquareShapeType>(SquareShapeType.values());
 		cBox.removeItem(SquareShapeType.NoShape);
 		cBox.setSelectedItem(SquareShapeType.Square);
+		cBox.addActionListener(al);
 		panel.add(cBox);
 		optionPanel.add(panel);
 		
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Cells/Vertices per side");
 		dimSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+		dimSpinner.addChangeListener(al);
 		panel.add(label);
 		panel.add(dimSpinner);
 		optionPanel.add(panel);
@@ -71,6 +79,7 @@ public class SquarePanel extends JPanel
 		panel.add(label);
 		diagBox = new JComboBox<DiagonalsType>(DiagonalsType.values());
 		diagBox.setSelectedItem(DiagonalsType.Implied);
+		diagBox.addActionListener(al);
 		panel.add(diagBox);
 		optionPanel.add(panel);
 		
@@ -79,6 +88,7 @@ public class SquarePanel extends JPanel
 		panel.add(label);
 		ButtonGroup group = new ButtonGroup();
 		JRadioButton button = new JRadioButton("Yes");
+		button.addActionListener(al);
 		button.addActionListener(new ActionListener()
 		{
 			
@@ -93,6 +103,7 @@ public class SquarePanel extends JPanel
 		panel.add(button);
 		button = new JRadioButton("No");
 		button.setSelected(true);
+		button.addActionListener(al);
 		button.addActionListener(new ActionListener()
 		{
 			
@@ -112,6 +123,7 @@ public class SquarePanel extends JPanel
 		group = new ButtonGroup();
 		button = new JRadioButton("Diagonal");
 		button.setSelected(true);
+		button.addActionListener(al);
 		button.addActionListener(new ActionListener()
 		{
 			
@@ -125,6 +137,7 @@ public class SquarePanel extends JPanel
 		group.add(button);
 		panel.add(button);
 		button = new JRadioButton("Pyramidal");
+		button.addActionListener(al);
 		button.addActionListener(new ActionListener()
 		{
 			
@@ -147,6 +160,8 @@ public class SquarePanel extends JPanel
 		buttonPanel.add(makeCreateButton());
 		buttonPanel.add(makeCancelButton());
 		add(buttonPanel,BorderLayout.SOUTH);
+		
+		createBoard();
 	}
 	
 	public JButton makeCancelButton() {
@@ -171,13 +186,27 @@ public class SquarePanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				SquareShapeType shapeType = (SquareShapeType) cBox.getSelectedItem();
-				DimConstant dim = new DimConstant((int)dimSpinner.getValue());
-				DiagonalsType diagType = (DiagonalsType) diagBox.getSelectedItem();
-				maker.setGraphFunction(Square.construct(shapeType, dim, diagEnabled ? diagType : null, diagEnabled ? null : pyramid));
+				maker.setGraphFunction(graph);
 				dialog.dispose();
 			}
 		});
 		return button;
+	}
+
+	@Override
+	public void createBoard()
+	{
+		// TODO Auto-generated method stub
+		SquareShapeType shapeType = (SquareShapeType) cBox.getSelectedItem();
+		DimConstant dim = new DimConstant((int)dimSpinner.getValue());
+		DiagonalsType diagType = (DiagonalsType) diagBox.getSelectedItem();
+		graph = Square.construct(shapeType, dim, diagEnabled ? diagType : null, diagEnabled ? null : pyramid);
+	}
+
+	@Override
+	public GraphFunction getGraph()
+	{
+		// TODO Auto-generated method stub
+		return graph;
 	}
 }

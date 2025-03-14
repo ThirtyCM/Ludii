@@ -1,16 +1,23 @@
 package app.boardMaker.dialogs;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import app.boardMaker.maker.Maker;
+import app.boardMaker.panels.ParameterPanel;
+import app.boardMaker.tools.PreviewPanel;
 import app.boardMaker.window.TabbedPane.BoardTiling;
 
 public class ParameterDialog extends JDialog
@@ -44,11 +51,13 @@ public class ParameterDialog extends JDialog
 		for (BoardTiling tiling : BoardTiling.values()) {
 			try {
 				JPanel p = new JPanel(new BorderLayout());
-				JPanel tmp = (JPanel) Class.forName("app.boardMaker.panels."+tiling+"Panel").getConstructor(JDialog.class,Maker.class).newInstance(this,maker);
+				PreviewPanel prev = new PreviewPanel(maker);
+				ParameterPanel tmp = (ParameterPanel) Class.forName("app.boardMaker.panels."+tiling+"Panel").getConstructor(JDialog.class,Maker.class,PreviewPanel.class).newInstance(this,maker,prev);
+				prev.setParams(tmp);
 				tmp.setPreferredSize(new Dimension(400,500));
+				prev.setPreferredSize(new Dimension(400,500));
 				p.add(tmp,BorderLayout.WEST);
-				p.add(new JSeparator(SwingConstants.VERTICAL),BorderLayout.CENTER);
-				// Add preview panel
+				p.add(prev,BorderLayout.EAST);
 				tPane.addTab(tiling.name(), p);
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException

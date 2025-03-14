@@ -20,13 +20,15 @@ import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.BoardMaker;
 import app.boardMaker.maker.Maker;
+import app.boardMaker.tools.PreviewPanel;
 import game.Game;
 import game.functions.dim.DimConstant;
 import game.functions.dim.DimFunction;
+import game.functions.graph.GraphFunction;
 import game.functions.graph.generators.basis.brick.Brick;
 import game.functions.graph.generators.basis.brick.BrickShapeType;
 
-public class BrickPanel extends JPanel
+public class BrickPanel extends ParameterPanel
 {
 	private static final long serialVersionUID = 1L;
 	private final Maker maker;
@@ -36,10 +38,14 @@ public class BrickPanel extends JPanel
 	private JSpinner colSpinner;
 	private JComboBox<BrickShapeType> cBox;
 	
-	public BrickPanel(JDialog dialog, Maker maker) {
+	private GraphFunction graph;
+	private ActionListener al;
+	
+	public BrickPanel(JDialog dialog, Maker maker, PreviewPanel al) {
 		super(new BorderLayout());
 		this.dialog = dialog;
 		this.maker = maker;
+		this.al = al;
 		
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
@@ -49,6 +55,7 @@ public class BrickPanel extends JPanel
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JLabel label = new JLabel("Board shape: ");
 		cBox = new JComboBox<>(BrickShapeType.values());
+		cBox.addActionListener(al);
 		panel.add(label);
 		panel.add(cBox);
 		optionPanel.add(panel);
@@ -57,6 +64,7 @@ public class BrickPanel extends JPanel
 		label = new JLabel("Number of rows: ");
 		panel.add(label);
 		rowSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+		rowSpinner.addChangeListener(al);
 		panel.add(rowSpinner);
 		optionPanel.add(panel);
 		
@@ -64,6 +72,7 @@ public class BrickPanel extends JPanel
 		label = new JLabel("Number of columns (optional): ");
 		panel.add(label);
 		colSpinner = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
+		colSpinner.addChangeListener(al);
 		panel.add(colSpinner);
 		optionPanel.add(panel);
 		
@@ -72,6 +81,7 @@ public class BrickPanel extends JPanel
 		panel.add(label);
 		ButtonGroup group = new ButtonGroup();
 		JRadioButton button = new JRadioButton("Enabled");
+		button.addActionListener(al);
 		button.addActionListener(new ActionListener()
 		{
 			
@@ -86,6 +96,7 @@ public class BrickPanel extends JPanel
 		group.add(button);
 		button = new JRadioButton("Disabled");
 		button.setSelected(true);
+		button.addActionListener(al);
 		button.addActionListener(new ActionListener()
 		{
 			
@@ -108,6 +119,8 @@ public class BrickPanel extends JPanel
 		buttonPanel.add(makeCreateButton());
 		buttonPanel.add(makeCancelButton());
 		add(buttonPanel,BorderLayout.SOUTH);
+		
+		createBoard();
 	}
 	
 	public JButton makeCancelButton() {
@@ -132,13 +145,25 @@ public class BrickPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				BrickShapeType shape = (BrickShapeType) cBox.getSelectedItem();
-				DimConstant dimA = new DimConstant((int)rowSpinner.getValue());
-				DimConstant dimB = new DimConstant((int)colSpinner.getValue());
-				maker.setGraphFunction(Brick.construct(shape,dimA,(dimB.eval() == 0) ? null : dimB,trim));
+				maker.setGraphFunction(graph);
 				dialog.dispose();
 			}
 		});
 		return button;
+	}
+	
+	@Override
+	public GraphFunction getGraph() {
+		return graph;
+	}
+
+	@Override
+	public void createBoard()
+	{
+		// TODO Auto-generated method stub
+		BrickShapeType shape = (BrickShapeType) cBox.getSelectedItem();
+		DimConstant dimA = new DimConstant((int)rowSpinner.getValue());
+		DimConstant dimB = new DimConstant((int)colSpinner.getValue());
+		graph = Brick.construct(shape, dimA, (dimB.eval() == 0) ? null : dimB, trim);
 	}
 }
