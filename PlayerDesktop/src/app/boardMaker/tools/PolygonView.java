@@ -1,5 +1,6 @@
 package app.boardMaker.tools;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -90,6 +91,18 @@ public class PolygonView extends JLabel {
 			for (int y = 0; y < anchorY.size(); y++) {
 				g2d.fillOval(anchorX.get(x), anchorY.get(y), dotSize, dotSize);
 			}
+		}
+		
+		for (int i = 0; i < poly.size(); i++) {
+			g2d.setColor(Color.black);
+
+			int x1 = anchorX.get(poly.get(i).getX()) + dotSize/2;
+			int x2 = anchorX.get(poly.get((i + 1) % poly.size()).getX()) + dotSize/2;
+			int y1 = anchorY.get(anchorY.size() - 1 - poly.get(i).getY()) + dotSize/2;
+			int y2 = anchorY.get(anchorY.size() - 1 - poly.get((i + 1) % poly.size()).getY()) + dotSize/2;
+			
+			g2d.setStroke(new BasicStroke(5));
+			g2d.drawLine(x1, y1, x2, y2);
 		}
 		
 		for (Coordinates p : poly) {	
