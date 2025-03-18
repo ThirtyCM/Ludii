@@ -24,16 +24,9 @@ public class PolygonView extends JLabel {
 	
 	private List<Integer> anchorX;
 	private List<Integer> anchorY;
-	private List<Pair<Integer,Integer>> poly;
+	private List<Coordinates> poly;
 	
-	public PolygonView() {
-		setBackground(Color.white);
-		setOpaque(true);
-		setBorder(BorderFactory.createLineBorder(Color.black));
-		
-		this.width = getWidth();
-		this.height = getHeight();
-	}
+	private Coordinates current;
 	
 	public PolygonView(int width, int height, int n) {
 		setBackground(Color.white);
@@ -50,7 +43,7 @@ public class PolygonView extends JLabel {
 		
 		anchorX = new ArrayList<Integer>();
 		anchorY = new ArrayList<Integer>();
-		poly = new ArrayList<Pair<Integer,Integer>>();
+		poly = new ArrayList<Coordinates>();
 		
 		for (int x = 0; x < this.width; x += incX) {
 			anchorX.add(x + incX/2 - dotSize/2);
@@ -70,8 +63,15 @@ public class PolygonView extends JLabel {
 		return anchorY;
 	}
 	
-	public void addCorner(Pair<Integer,Integer> coordinates) {
-		poly.add(coordinates);
+	public List<Coordinates> getPoly() {
+		return poly;
+	}
+	
+	public void addCorner(Coordinates coordinates) {
+		if (!poly.contains(coordinates)) {
+			poly.add(coordinates);
+			current = coordinates;
+		}
 	}
 	
 	public int getDotSize() {
@@ -92,9 +92,13 @@ public class PolygonView extends JLabel {
 			}
 		}
 		
-		g2d.setColor(Color.black);
-		for (Pair<Integer,Integer> p : poly) {
-			g2d.fillOval(anchorX.get(p.getFirst()), anchorY.get(p.getSecond()), dotSize, dotSize);
+		for (Coordinates p : poly) {	
+			if (p.equals(current)) {
+				g2d.setColor(Color.red);
+			} else {
+				g2d.setColor(Color.black);
+			}
+			g2d.fillOval(anchorX.get(p.getX()), anchorY.get(anchorY.size() - 1 - p.getY()), dotSize, dotSize);
 		}
 	}
 	

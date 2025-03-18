@@ -92,26 +92,28 @@ public class Maker
 	}
 	
 	public void drawPreview(Graphics2D g2d, int width, int height, GraphFunction graph) {
-		Board board = new Board(graph, null, null, null, null, null, null);
-		
-		Game game = new Game(gameName, players, gameMode, new Equipment(new Item[] {board}), null);
-		game.create();
-		game.setMetadata(null);
-		this.game = game;
-		
-		Context context = new Context(game, new Trial(game));
-		Bridge bridge = new Bridge();
-		
-		BoardStyle style = new BoardStyle(bridge, board);
-		style.setPlacement(context, new Rectangle(0,0,width, height));
-		style.render(PlaneType.BOARD, context);
-		
-		String svg = style.containerSVGImage();
-		if (svg == null || svg.equals("")) {
-			return;
+		if (graph != null) {
+			Board board = new Board(graph, null, null, null, null, null, null);
+			
+			Game game = new Game(gameName, players, gameMode, new Equipment(new Item[] {board}), null);
+			game.create();
+			game.setMetadata(null);
+			this.game = game;
+			
+			Context context = new Context(game, new Trial(game));
+			Bridge bridge = new Bridge();
+			
+			BoardStyle style = new BoardStyle(bridge, board);
+			style.setPlacement(context, new Rectangle(0,0,width, height));
+			style.render(PlaneType.BOARD, context);
+			
+			String svg = style.containerSVGImage();
+			if (svg == null || svg.equals("")) {
+				return;
+			}
+			
+			g2d.drawImage(SVGUtil.createSVGImage(svg, width, height), 0, 0, null);
 		}
-		
-		g2d.drawImage(SVGUtil.createSVGImage(svg, width, height), 0, 0, null);
 	}
 	
 	//----------------------------------------------------------------------

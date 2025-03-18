@@ -4,15 +4,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import app.boardMaker.panels.ParameterPanel;
 import game.functions.ints.IntConstant;
 
 public class PolygonListener implements MouseListener
 {
 	
 	private PolygonView grid;
+	private ParameterPanel params;
+	private PreviewPanel preview;
 	
-	public PolygonListener(PolygonView view) {
+	public PolygonListener(PolygonView view, ParameterPanel params, PreviewPanel preview) {
 		this.grid = view;
+		this.params = params;
+		this.preview = preview;
 	}
 
 	@Override
@@ -33,13 +38,15 @@ public class PolygonListener implements MouseListener
 		for (int i = 0; i < grid.getAnchorY().size(); i++) {
 			int distance = y - grid.getAnchorY().get(i);
 			if (distance > 0 && distance < grid.getDotSize()) {
-				addy = i;
+				addy = grid.getAnchorY().size() - 1 - i;  //java coordinates are top to bottom while Ludii's are bottom to top
 			}
 		}
 		
 		if (addx != -1 && addy != -1) {
-			grid.addCorner(new Pair<Integer,Integer>(addx, addy));
+			grid.addCorner(new Coordinates(addx, addy));
 			grid.repaint();
+			params.createBoard();
+			preview.repaint();
 		}
 	}
 
