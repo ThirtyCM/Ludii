@@ -51,5 +51,8 @@ public enum TriShapeType
 		
 	/** Diamond shape extended vertically. */
 	Prism,
+	
+	/** Custom board shape */
+	Custom,
 	;
 }

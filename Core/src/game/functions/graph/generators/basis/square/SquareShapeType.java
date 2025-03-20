@@ -48,5 +48,8 @@ public enum SquareShapeType
 	
 	/** Alternating sides are staggered. */
 	Limping,
+	
+	/** Custom board shape */
+	Custom,
 	;
 }
