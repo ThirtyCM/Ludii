@@ -109,7 +109,7 @@ public class PolygonView extends JLabel {
 			if (p.equals(current)) {
 				g2d.setColor(Color.red);
 			} else {
-				g2d.setColor(Color.black);
+				g2d.setColor(Color.blue);
 			}
 			g2d.fillOval(anchorX.get(p.getX()), anchorY.get(anchorY.size() - 1 - p.getY()), dotSize, dotSize);
 		}

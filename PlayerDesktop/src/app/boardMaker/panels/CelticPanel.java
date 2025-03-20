@@ -23,6 +23,7 @@ import javax.swing.SpinnerNumberModel;
 import app.boardMaker.maker.Maker;
 import app.boardMaker.tools.Coordinates;
 import app.boardMaker.tools.PolygonListener;
+import app.boardMaker.tools.PolygonMaker;
 import app.boardMaker.tools.PolygonView;
 import app.boardMaker.tools.PreviewPanel;
 import game.functions.dim.DimConstant;
@@ -41,7 +42,7 @@ public class CelticPanel extends ParameterPanel implements ItemListener
 	private JSpinner rowSpinner;
 	private JSpinner colSpinner;
 	private JComboBox<String> shapeCBox;
-	private PolygonView polygonView;
+	private PolygonMaker polygonMaker;
 	
 	private PolygonListener pl;
 	private GraphFunction graph;
@@ -96,10 +97,8 @@ public class CelticPanel extends ParameterPanel implements ItemListener
 		//----------------------------------------------------------------------------------------------
 		//PolygonView linked to the second item of shapeItems
 		JPanel polygonCard = new JPanel();
-		polygonView = new PolygonView(300,300,10);
-		this.pl = new PolygonListener(polygonView,this,al);
-		polygonView.addMouseListener(pl);
-		polygonCard.add(polygonView);
+		polygonMaker = new PolygonMaker(this, al);
+		polygonCard.add(polygonMaker);
 		
 		//----------------------------------------------------------------------------------------------
 		//Card panel
@@ -173,7 +172,7 @@ public class CelticPanel extends ParameterPanel implements ItemListener
 			DimConstant dimB = new DimConstant((int)colSpinner.getValue());
 			graph = new Celtic(dimA, (dimB.eval() == 0) ? null : dimB);
 		} else if (((String)shapeCBox.getSelectedItem()).equals("Custom")) {
-			List<Coordinates> polygon = polygonView.getPoly();
+			List<Coordinates> polygon = polygonMaker.getPoly();
 			if (polygon.size() > 2) {
 				Float[][] pts = new Float[polygon.size()][2];
 				
