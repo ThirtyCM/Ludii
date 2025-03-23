@@ -44,16 +44,13 @@ public class CelticPanel extends ParameterPanel implements ItemListener
 	private JComboBox<String> shapeCBox;
 	private PolygonMaker polygonMaker;
 	
-	private PolygonListener pl;
 	private GraphFunction graph;
-	private ActionListener al;
 	
 	public CelticPanel(JDialog dialog, Maker maker, PreviewPanel al) {
 		super(new BorderLayout());
 		
 		this.dialog = dialog;
 		this.maker = maker;
-		this.al = al;
 		
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
@@ -174,14 +171,7 @@ public class CelticPanel extends ParameterPanel implements ItemListener
 		} else if (((String)shapeCBox.getSelectedItem()).equals("Custom")) {
 			List<Coordinates> polygon = polygonMaker.getPoly();
 			if (polygon.size() > 2) {
-				Float[][] pts = new Float[polygon.size()][2];
-				
-				for (int i = 0; i < polygon.size(); i++) {
-					pts[i][0] = (float) polygon.get(i).getX();
-					pts[i][1] = (float) polygon.get(i).getY();
-				}
-				
-				Poly poly = new Poly(pts, null);
+				Poly poly = makePoly(polygon);
 				graph = new Celtic(poly, null);
 			} else {
 				graph = null;

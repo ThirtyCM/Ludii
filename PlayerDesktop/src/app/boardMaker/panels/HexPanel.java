@@ -1,10 +1,14 @@
 package app.boardMaker.panels;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -17,13 +21,16 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.maker.Maker;
+import app.boardMaker.tools.Coordinates;
+import app.boardMaker.tools.PolygonMaker;
 import app.boardMaker.tools.PreviewPanel;
 import game.functions.dim.DimConstant;
 import game.functions.graph.GraphFunction;
 import game.functions.graph.generators.basis.hex.Hex;
 import game.functions.graph.generators.basis.hex.HexShapeType;
+import game.util.graph.Poly;
 
-public class HexPanel extends ParameterPanel
+public class HexPanel extends ParameterPanel implements ItemListener
 {
 	private JDialog dialog;
 	private Maker maker;
@@ -33,6 +40,9 @@ public class HexPanel extends ParameterPanel
 	
 	private GraphFunction graph;
 	private ActionListener al;
+	
+	private PolygonMaker polygonMaker;
+	private JPanel cards;
 	
 	public HexPanel(JDialog dialog, Maker maker, PreviewPanel al) {
 		super(new BorderLayout());
@@ -55,9 +65,17 @@ public class HexPanel extends ParameterPanel
 		cBox.removeItem(HexShapeType.NoShape);
 		cBox.setSelectedItem(HexShapeType.Hexagon);
 		cBox.addActionListener(al);
+		cBox.addItemListener(this);
 		panel.add(label);
 		panel.add(cBox);
 		optionPanel.add(panel);
+		
+		//---------------------------------------------------------------------------------------
+		// Board shape
+		JPanel boardCard = new JPanel();
+		boardCard.setLayout(new BoxLayout(boardCard, BoxLayout.Y_AXIS));
+		
+		//boardCard.add(Box.createVerticalGlue());
 		
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Primary number of sites per side: ");
@@ -65,7 +83,7 @@ public class HexPanel extends ParameterPanel
 		rowSpinner = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 		rowSpinner.addChangeListener(al);
 		panel.add(rowSpinner);
-		optionPanel.add(panel);
+		boardCard.add(panel);
 		
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Secondary number of sites (optional): ");
@@ -73,8 +91,22 @@ public class HexPanel extends ParameterPanel
 		colSpinner = new JSpinner(new SpinnerNumberModel(0,0,Integer.MAX_VALUE,1));
 		colSpinner.addChangeListener(al);
 		panel.add(colSpinner);
-		optionPanel.add(panel);
+		boardCard.add(panel);
 		
+		//---------------------------------------------------------------------------------------
+		// Custom shape
+		JPanel customCard = new JPanel();
+		polygonMaker = new PolygonMaker(this, al);
+		customCard.add(polygonMaker);
+		
+		//---------------------------------------------------------------------------------------
+		// Cards
+		cards = new JPanel(new CardLayout());
+		cards.add(boardCard,"Shape");
+		cards.add(customCard,"Custom");
+		optionPanel.add(cards);
+		
+		//---------------------------------------------------------------------------------------
 		optionPanel.add(Box.createVerticalGlue());
 		
 		add(optionPanel,BorderLayout.WEST);
@@ -121,9 +153,19 @@ public class HexPanel extends ParameterPanel
 	{
 		// TODO Auto-generated method stub
 		HexShapeType shape = (HexShapeType) cBox.getSelectedItem();
-		DimConstant dimA = new DimConstant((int)rowSpinner.getValue());
-		DimConstant dimB = new DimConstant((int)colSpinner.getValue());
-		graph = Hex.construct(shape, dimA, (dimB.eval() == 0) ? null : dimB);
+		if (!shape.equals(HexShapeType.Custom)) {
+			DimConstant dimA = new DimConstant((int)rowSpinner.getValue());
+			DimConstant dimB = new DimConstant((int)colSpinner.getValue());
+			graph = Hex.construct(shape, dimA, (dimB.eval() == 0) ? null : dimB);
+		} else {
+			List<Coordinates> polygon = polygonMaker.getPoly();
+			if (polygon.size() > 2) {
+				Poly poly = makePoly(polygon);
+				graph = Hex.construct(poly, null);
+			} else {
+				graph = null;
+			}
+		}
 	}
 
 	@Override
@@ -131,5 +173,17 @@ public class HexPanel extends ParameterPanel
 	{
 		// TODO Auto-generated method stub
 		return graph;
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e)
+	{
+		// TODO Auto-generated method stub
+		CardLayout cl = (CardLayout) cards.getLayout();
+		if (((HexShapeType)e.getItem()).equals(HexShapeType.Custom)) {
+			cl.show(cards, "Custom");
+		} else {
+			cl.show(cards, "Shape");
+		}
 	}
 }

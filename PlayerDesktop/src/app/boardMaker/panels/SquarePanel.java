@@ -1,10 +1,14 @@
 package app.boardMaker.panels;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -19,6 +23,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.maker.Maker;
+import app.boardMaker.tools.Coordinates;
+import app.boardMaker.tools.PolygonMaker;
 import app.boardMaker.tools.PreviewPanel;
 import game.functions.dim.DimConstant;
 import game.functions.graph.GraphFunction;
@@ -27,8 +33,9 @@ import game.functions.graph.generators.basis.brick.BrickShapeType;
 import game.functions.graph.generators.basis.square.DiagonalsType;
 import game.functions.graph.generators.basis.square.Square;
 import game.functions.graph.generators.basis.square.SquareShapeType;
+import game.util.graph.Poly;
 
-public class SquarePanel extends ParameterPanel
+public class SquarePanel extends ParameterPanel implements ItemListener
 {
 	private JDialog dialog;
 	private Maker maker;
@@ -39,14 +46,14 @@ public class SquarePanel extends ParameterPanel
 	private boolean diagEnabled = true;
 	
 	private GraphFunction graph;
-	private ActionListener al;
+	private JPanel cards;
+	private PolygonMaker pm;
 	
 	public SquarePanel(JDialog dialog, Maker maker, PreviewPanel al) {
 		super(new BorderLayout());
 		
 		this.dialog = dialog;
 		this.maker = maker;
-		this.al = al;
 		
 		JPanel optionPanel = new JPanel();
 		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
@@ -63,8 +70,14 @@ public class SquarePanel extends ParameterPanel
 		cBox.removeItem(SquareShapeType.NoShape);
 		cBox.setSelectedItem(SquareShapeType.Square);
 		cBox.addActionListener(al);
+		cBox.addItemListener(this);
 		panel.add(cBox);
 		optionPanel.add(panel);
+		
+		//-------------------------------------------------------------------------------
+		// Board shape
+		JPanel boardCard = new JPanel();
+		boardCard.setLayout(new BoxLayout(boardCard, BoxLayout.Y_AXIS));
 		
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Cells/Vertices per side");
@@ -72,16 +85,16 @@ public class SquarePanel extends ParameterPanel
 		dimSpinner.addChangeListener(al);
 		panel.add(label);
 		panel.add(dimSpinner);
-		optionPanel.add(panel);
+		boardCard.add(panel);
 		
-		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel diagPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Type of diagonals: ");
-		panel.add(label);
+		diagPanel.add(label);
 		diagBox = new JComboBox<DiagonalsType>(DiagonalsType.values());
 		diagBox.setSelectedItem(DiagonalsType.Implied);
 		diagBox.addActionListener(al);
-		panel.add(diagBox);
-		optionPanel.add(panel);
+		diagPanel.add(diagBox);
+		boardCard.add(diagPanel);
 		
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Pyramidal stacking: ");
@@ -116,7 +129,7 @@ public class SquarePanel extends ParameterPanel
 		});
 		group.add(button);
 		panel.add(button);
-		optionPanel.add(panel);
+		boardCard.add(panel);
 		
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		label = new JLabel("Select active: ");
@@ -150,7 +163,25 @@ public class SquarePanel extends ParameterPanel
 		});
 		group.add(button);
 		panel.add(button);
-		optionPanel.add(panel);
+		boardCard.add(panel);
+		
+		//-------------------------------------------------------------------------------
+		// Custom shape
+		JPanel customCard = new JPanel();
+		customCard.setLayout(new BoxLayout(customCard, BoxLayout.Y_AXIS));
+		
+		pm = new PolygonMaker(this, al);
+		customCard.add(pm);
+		customCard.add(diagPanel);
+		
+		//-------------------------------------------------------------------------------
+		// Cards
+		cards = new JPanel(new CardLayout());
+		cards.add(boardCard,"Shape");
+		cards.add(customCard,"Custom");
+		optionPanel.add(cards);
+		
+		//-------------------------------------------------------------------------------
 		
 		optionPanel.add(Box.createVerticalGlue());
 		
@@ -198,9 +229,19 @@ public class SquarePanel extends ParameterPanel
 	{
 		// TODO Auto-generated method stub
 		SquareShapeType shapeType = (SquareShapeType) cBox.getSelectedItem();
-		DimConstant dim = new DimConstant((int)dimSpinner.getValue());
-		DiagonalsType diagType = (DiagonalsType) diagBox.getSelectedItem();
-		graph = Square.construct(shapeType, dim, diagEnabled ? diagType : null, diagEnabled ? null : pyramid);
+		if (!shapeType.equals(SquareShapeType.Custom)) {
+			DimConstant dim = new DimConstant((int)dimSpinner.getValue());
+			DiagonalsType diagType = (DiagonalsType) diagBox.getSelectedItem();
+			graph = Square.construct(shapeType, dim, diagEnabled ? diagType : null, diagEnabled ? null : pyramid);
+		} else {
+			List<Coordinates> polygon = pm.getPoly();
+			if (polygon.size() > 2) {
+				Poly poly = makePoly(polygon);
+				graph = Square.construct(poly, null, (DiagonalsType) diagBox.getSelectedItem());
+			} else {
+				graph = null;
+			}
+		}
 	}
 
 	@Override
@@ -208,5 +249,17 @@ public class SquarePanel extends ParameterPanel
 	{
 		// TODO Auto-generated method stub
 		return graph;
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e)
+	{
+		// TODO Auto-generated method stub
+		CardLayout cl = (CardLayout) cards.getLayout();
+		if (((SquareShapeType)e.getItem()).equals(SquareShapeType.Custom)) {
+			cl.show(cards, "Custom");
+		} else {
+			cl.show(cards, "Shape");
+		}
 	}
 }
