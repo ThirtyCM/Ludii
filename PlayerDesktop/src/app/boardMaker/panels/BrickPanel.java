@@ -20,7 +20,7 @@ import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.BoardMaker;
 import app.boardMaker.maker.Maker;
-import app.boardMaker.tools.PreviewPanel;
+import app.boardMaker.previews.PreviewPanel;
 import game.Game;
 import game.functions.dim.DimConstant;
 import game.functions.dim.DimFunction;

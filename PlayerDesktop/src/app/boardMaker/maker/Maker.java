@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 
 import javax.swing.JDialog;
 
+import annotations.Opt;
 import app.boardMaker.dialogs.NGDialog;
 import app.boardMaker.window.boardpanel.BoardPanel;
 import app.utils.SVGUtil;
@@ -13,6 +14,7 @@ import game.Game;
 import game.equipment.Equipment;
 import game.equipment.Item;
 import game.equipment.container.board.Board;
+import game.equipment.container.board.custom.MancalaBoard;
 import game.functions.graph.GraphFunction;
 import game.functions.ints.count.simple.CountMovesThisTurn;
 import game.mode.Mode;
@@ -34,13 +36,15 @@ public class Maker
 {
 	
 	private GraphFunction gFct;
-	private GraphFunction previewGFct;
 	private BoardPanel boardPanel;
 	private Game game;
 	
 	private String gameName;
 	private Players players;
 	private Mode gameMode;
+	
+	private MancalaBoard mancalaBoard;
+	private boolean mancala = false;
 	
 	public Maker() {	
 	}
@@ -49,27 +53,51 @@ public class Maker
 		return game;
 	}
 	
+	public String getName() {
+		return gameName;
+	}
+	
+	public Players getPlayers() {
+		return players;
+	}
+	
+	public Mode getMode() {
+		return gameMode;
+	}
+	
 	public GraphFunction getGraphFunction() {
 		return gFct;
 	}
 	
 	public void setGraphFunction(GraphFunction gFct) {
 		this.gFct = gFct;
+		mancala = false;
 		boardPanel.repaint();
-	}
-	
-	public void setPreview(GraphFunction gFct) {
-		previewGFct = gFct;
 	}
 	
 	public void setBoardPanel(BoardPanel bPanel) {
 		this.boardPanel = bPanel;
 	}
 	
+	public MancalaBoard getMancala() {
+		return mancalaBoard;
+	}
+	
+	public void setMancala(MancalaBoard board) {
+		this.mancalaBoard = board;
+		mancala = true;
+		boardPanel.repaint();
+	}
+	
 	//----------------------------------------------------------------------
 	
 	public void drawBoard(Graphics2D g2d, int width, int height) {
-		Board board = new Board(gFct, null, null, null, null, null, null);
+		Board board;
+		if (mancala == true) {
+			board = mancalaBoard;
+		} else {
+			board = new Board(gFct, null, null, null, null, null, null);
+		}
 		
 		Game game = new Game(gameName, players, gameMode, new Equipment(new Item[] {board}), null);
 		game.create();
@@ -78,7 +106,7 @@ public class Maker
 		
 		Context context = new Context(game, new Trial(game));
 		Bridge bridge = new Bridge();
-		
+				
 		BoardStyle style = new BoardStyle(bridge, board);
 		style.setPlacement(context, new Rectangle(0,0,width, height));
 		style.render(PlaneType.BOARD, context);

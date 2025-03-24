@@ -16,7 +16,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.maker.Maker;
-import app.boardMaker.tools.PreviewPanel;
+import app.boardMaker.previews.PreviewPanel;
 import game.functions.dim.DimConstant;
 import game.functions.graph.GraphFunction;
 import game.functions.graph.generators.basis.tri.Tri;

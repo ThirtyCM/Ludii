@@ -1,4 +1,4 @@
-package app.boardMaker.tools;
+package app.boardMaker.previews;
 
 import java.awt.Color;
 import java.awt.Graphics;

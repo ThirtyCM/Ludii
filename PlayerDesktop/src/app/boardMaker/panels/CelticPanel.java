@@ -21,11 +21,11 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import app.boardMaker.maker.Maker;
+import app.boardMaker.previews.PreviewPanel;
 import app.boardMaker.tools.Coordinates;
 import app.boardMaker.tools.PolygonListener;
 import app.boardMaker.tools.PolygonMaker;
 import app.boardMaker.tools.PolygonView;
-import app.boardMaker.tools.PreviewPanel;
 import game.functions.dim.DimConstant;
 import game.functions.graph.GraphFunction;
 import game.functions.graph.generators.basis.brick.Brick;

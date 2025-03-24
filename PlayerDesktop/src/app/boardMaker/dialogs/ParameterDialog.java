@@ -17,7 +17,7 @@ import javax.swing.event.ChangeListener;
 
 import app.boardMaker.maker.Maker;
 import app.boardMaker.panels.ParameterPanel;
-import app.boardMaker.tools.PreviewPanel;
+import app.boardMaker.previews.PreviewPanel;
 import app.boardMaker.window.TabbedPane.BoardTiling;
 
 public class ParameterDialog extends JDialog

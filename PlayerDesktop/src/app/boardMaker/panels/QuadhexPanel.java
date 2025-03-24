@@ -20,7 +20,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import app.boardMaker.maker.Maker;
-import app.boardMaker.tools.PreviewPanel;
+import app.boardMaker.previews.PreviewPanel;
 import game.functions.dim.DimConstant;
 import game.functions.graph.GraphFunction;
 import game.functions.graph.generators.basis.brick.Brick;

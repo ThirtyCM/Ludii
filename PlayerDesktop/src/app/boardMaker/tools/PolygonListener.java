@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import app.boardMaker.panels.ParameterPanel;
+import app.boardMaker.previews.PreviewPanel;
 import game.functions.ints.IntConstant;
 
 public class PolygonListener implements MouseListener

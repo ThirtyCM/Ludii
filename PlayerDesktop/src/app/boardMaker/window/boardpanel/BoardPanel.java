@@ -43,7 +43,7 @@ public class BoardPanel extends JPanel
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-		if (maker.getGraphFunction() != null) {
+		if (maker.getGraphFunction() != null || maker.getMancala() != null) {
 			int boardSize = Math.min(this.getHeight(), (int)(this.getWidth() * boardRatio));
 			maker.drawBoard(g2d,boardSize, boardSize);
 		}

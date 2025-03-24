@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import app.boardMaker.panels.ParameterPanel;
+import app.boardMaker.previews.PreviewPanel;
 
 public class PolygonMaker extends JPanel
 {

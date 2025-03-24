@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import app.boardMaker.dialogs.MancalaDialog;
 import app.boardMaker.dialogs.ParameterDialog;
 import app.boardMaker.maker.Maker;
 import game.functions.dim.DimConstant;
@@ -40,9 +41,13 @@ public class BoardButtonListener implements ActionListener
 			case "Surakarta":
 				break;
 			case "Mancala":
+				new MancalaDialog(maker);
 				break;
-			default : 
+			case "Classic" : 
 				dialog = new ParameterDialog(maker);
+				break;
+			default :
+				break;
 		}
 	}
 }

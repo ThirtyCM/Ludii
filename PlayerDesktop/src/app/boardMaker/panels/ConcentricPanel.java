@@ -30,7 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.text.NumberFormatter;
 
 import app.boardMaker.maker.Maker;
-import app.boardMaker.tools.PreviewPanel;
+import app.boardMaker.previews.PreviewPanel;
 import game.functions.booleans.BaseBooleanFunction;
 import game.functions.booleans.BooleanConstant;
 import game.functions.booleans.BooleanConstant.FalseConstant;
