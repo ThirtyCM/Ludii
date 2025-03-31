@@ -4,9 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 import annotations.Opt;
 import app.boardMaker.dialogs.NGDialog;
+import app.boardMaker.window.BoardMakerFrame;
 import app.boardMaker.window.boardpanel.BoardPanel;
 import app.utils.SVGUtil;
 import bridge.Bridge;
@@ -16,6 +18,7 @@ import game.equipment.Item;
 import game.equipment.container.board.Board;
 import game.equipment.container.board.custom.MancalaBoard;
 import game.functions.graph.GraphFunction;
+import game.functions.graph.operators.Dual;
 import game.functions.ints.count.simple.CountMovesThisTurn;
 import game.mode.Mode;
 import game.players.Players;
@@ -34,9 +37,10 @@ import view.container.styles.BoardStyle;
 
 public class Maker
 {
+	private BoardPanel boardPanel;
+	private BoardMakerFrame frame;
 	
 	private GraphFunction gFct;
-	private BoardPanel boardPanel;
 	private Game game;
 	
 	private String gameName;
@@ -48,6 +52,14 @@ public class Maker
 	
 	public Maker() {	
 	}
+	
+	public void createNewGame(String name, int players, ModeType mode) {
+		gameName = name;
+		this.players = new Players(players);
+		gameMode = new Mode(mode);
+	}
+	
+	//----------------------------------------------------------------------
 	
 	public Game getGame() {
 		return game;
@@ -89,6 +101,18 @@ public class Maker
 		boardPanel.repaint();
 	}
 	
+	public boolean isMancala() {
+		return mancala;
+	}
+	
+	public void setFrame(BoardMakerFrame frame) {
+		this.frame = frame;
+	}
+	
+	public BoardMakerFrame getFrame() {
+		return frame;
+	}
+	
 	//----------------------------------------------------------------------
 	
 	public void drawBoard(Graphics2D g2d, int width, int height) {
@@ -103,7 +127,7 @@ public class Maker
 		game.create();
 		game.setMetadata(null);
 		this.game = game;
-		
+				
 		Context context = new Context(game, new Trial(game));
 		Bridge bridge = new Bridge();
 				
@@ -146,9 +170,8 @@ public class Maker
 	
 	//----------------------------------------------------------------------
 	
-	public void createNewGame(String name, int players, ModeType mode) {
-		gameName = name;
-		this.players = new Players(players);
-		gameMode = new Mode(mode);
+	public void computeDual() {
+		gFct = new Dual(gFct);
+		boardPanel.repaint();
 	}
 }

@@ -18,6 +18,7 @@ public class BoardMakerTabbedBar extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	private final ActionListener boardButtonListener;
+	private final ActionListener funcButtonListener;
 	private final Maker maker;
 
 	public BoardMakerTabbedBar(Maker maker) {
@@ -25,6 +26,7 @@ public class BoardMakerTabbedBar extends JPanel
 		this.maker = maker;
 		
 		boardButtonListener = new BoardButtonListener(maker);
+		funcButtonListener = new FuncButtonListener(maker);
 		
 		JToolBar toolbar = null;
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -76,6 +78,10 @@ public class BoardMakerTabbedBar extends JPanel
 	
 	private void makeFunctionsButtons(JToolBar tb) {
 		// TODO
+		JButton button = new JButton("Dual");
+		button.setActionCommand("Dual");
+		button.addActionListener(funcButtonListener);
+		tb.add(button);
 	}
 
 }

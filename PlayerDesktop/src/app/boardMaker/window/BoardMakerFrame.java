@@ -38,6 +38,8 @@ public class BoardMakerFrame extends JFrame
 		setJMenuBar(menuBar);
 		setContentPane(new BoardMakerPanel(maker));
 		
+		maker.setFrame(this);
+		
 		pack();
 		setLocationRelativeTo(rootPane);
 		setVisible(true);
